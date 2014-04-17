@@ -32,10 +32,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.redsandbox.treasure.activity.InputActivity;
 import com.redsandbox.treasure.activity.PlaceActivity;
 import com.redsandbox.treasure.db.DataProviderContract;
+import com.redsandbox.treasure.navigation.MyLocationManager;
 import com.redsandbox.treasure.points.TreasurePoint;
 import com.redsandbox.treasure.points.TreasurePointManager;
 
@@ -56,8 +57,8 @@ import java.util.List;
  * This shows how to draw circles on a map.
  */
 public class MainActivity extends SherlockFragmentActivity implements
+        GoogleMap.OnMyLocationButtonClickListener,
         OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener, ActionBar.TabListener {
-    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
     private static final double DEFAULT_RADIUS = 1000000;
     public static final double RADIUS_OF_EARTH_METERS = 6371009;
 
@@ -66,11 +67,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     private GoogleMap mMap;
 
-    private int mFillColor;
     private MyObserver observer = new MyObserver(new Handler());
     private String[] mTabs;
     private ListView mList;
     private PointAdapter mAdapter;
+    private MyLocationManager mLocationManager;
 
     private class PointAdapter extends BaseAdapter {
 
@@ -164,6 +165,7 @@ public class MainActivity extends SherlockFragmentActivity implements
         mList = (ListView) findViewById(R.id.list);
         mAdapter = new PointAdapter();
         mList.setAdapter(mAdapter);
+        mLocationManager = new MyLocationManager(this);
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -179,6 +181,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         getContentResolver().registerContentObserver(
                 DataProviderContract.POINT_TABLE_CONTENTURI, true, observer);
+
     }
 
     @Override
@@ -186,6 +189,13 @@ public class MainActivity extends SherlockFragmentActivity implements
         super.onResume();
         setUpMapIfNeeded();
         TreasurePointManager.getInstance().fetchPoints();
+        mLocationManager.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mLocationManager.onPause();
     }
 
     @Override
@@ -221,14 +231,15 @@ public class MainActivity extends SherlockFragmentActivity implements
     }
 
     private void setUpMap() {
+
+        mLocationManager.setUpMap(mMap);
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMapLongClickListener(this);
 
         mMap.setOnInfoWindowClickListener(this);
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-
-        // Move the map so that it is centered on the initial circle
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 4.0f));
     }
 
     @Override
@@ -238,8 +249,6 @@ public class MainActivity extends SherlockFragmentActivity implements
                 .getView();
         // ok create it
         Intent intent = new Intent(this, InputActivity.class);
-        System.out.println("lat : " + point.latitude);
-        System.out.println("lon : " + point.longitude);
         intent.putExtra(InputActivity.POINT_X, point.latitude);
         intent.putExtra(InputActivity.POINT_Y, point.longitude);
         startActivity(intent);
@@ -255,6 +264,13 @@ public class MainActivity extends SherlockFragmentActivity implements
         startActivity(intent);
     }
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
