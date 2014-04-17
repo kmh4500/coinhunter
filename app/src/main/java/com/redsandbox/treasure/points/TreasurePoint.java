@@ -54,8 +54,8 @@ public class TreasurePoint {
 			for (int i = 0; i < jsonArray.length(); ++i) {
 				JSONObject jsonItem = jsonArray.getJSONObject(i);
 				if (jsonItem.has(X) && jsonItem.has(Y) && jsonItem.has(TEXT) && jsonItem.has(POST_ID) && jsonItem.has(SPACE_ID) &&  jsonItem.has(COLOR)) {
-					TreasurePoint point = new TreasurePoint((float) jsonItem.getDouble(X),
-							(float) jsonItem.getDouble(Y),
+					TreasurePoint point = new TreasurePoint(jsonItem.getDouble(X),
+							jsonItem.getDouble(Y),
 							jsonItem.getString(TEXT),
 							jsonItem.getInt(COLOR),
 							jsonItem.getString(POST_ID),
@@ -96,8 +96,8 @@ public class TreasurePoint {
 
 	public static TreasurePoint fromCursor(Cursor cursor) {
 		return new TreasurePoint(
-			(float) cursor.getInt(cursor.getColumnIndex(DataProviderContract.COLUMN_X)),
-			(float) cursor.getInt(cursor.getColumnIndex(DataProviderContract.COLUMN_Y)),
+			cursor.getDouble(cursor.getColumnIndex(DataProviderContract.COLUMN_X)),
+			cursor.getDouble(cursor.getColumnIndex(DataProviderContract.COLUMN_Y)),
 			cursor.getString(cursor.getColumnIndex(DataProviderContract.COLUMN_TEXT)),
 			cursor.getInt(cursor.getColumnIndex(DataProviderContract.COLUMN_COLOR)),
 			cursor.getString(cursor.getColumnIndex(DataProviderContract.COLUMN_POST_ID)),

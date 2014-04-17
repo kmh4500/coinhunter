@@ -86,7 +86,6 @@ public class PlaceActivity extends SherlockFragmentActivity implements ActionBar
     public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
     }
 
-
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
@@ -104,7 +103,7 @@ public class PlaceActivity extends SherlockFragmentActivity implements ActionBar
         // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(mPosition)      // Sets the center of the map to Mountain View
-                .zoom(11)                   // Sets the zoom
+                .zoom(15)                   // Sets the zoom
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
         // Move the map so that it is centered on the initial circle

@@ -46,6 +46,8 @@ public class InputActivity extends Activity  {
 		mPoint = new TreasurePoint();
 		mPoint.x = getIntent().getDoubleExtra(POINT_X, 0f);
 		mPoint.y = getIntent().getDoubleExtra(POINT_Y, 0f);
+        System.out.println("x : " + mPoint.x);
+        System.out.println("y : " + mPoint.y);
 		mPoint.spaceID = Constants.TREASURE_SPACE_ID;
         mPoint.color = getResources().getColor(R.color.star_color);
 

@@ -238,6 +238,8 @@ public class MainActivity extends SherlockFragmentActivity implements
                 .getView();
         // ok create it
         Intent intent = new Intent(this, InputActivity.class);
+        System.out.println("lat : " + point.latitude);
+        System.out.println("lon : " + point.longitude);
         intent.putExtra(InputActivity.POINT_X, point.latitude);
         intent.putExtra(InputActivity.POINT_Y, point.longitude);
         startActivity(intent);

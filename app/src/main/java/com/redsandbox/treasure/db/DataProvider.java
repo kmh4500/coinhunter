@@ -45,6 +45,7 @@ public class DataProvider extends ContentProvider {
     private static final String PRIMARY_KEY_TYPE = "INTEGER PRIMARY KEY";
     private static final String UNIQUE_TEXT_TYPE = "TEXT UNIQUE";
     private static final String INTEGER_TYPE = "INTEGER";
+    private static final String DOUBLE_TYPE = "DOUBLE";
 
     private static final String CREATE_POINT_TABLE_SQL = "CREATE TABLE" + " " +
             DataProviderContract.POINT_TABLE_NAME + " " +
@@ -54,8 +55,8 @@ public class DataProvider extends ContentProvider {
             DataProviderContract.COLUMN_COLOR + " " + INTEGER_TYPE + " ," +
             DataProviderContract.COLUMN_SPACE_ID + " " + TEXT_TYPE + " ," +
             DataProviderContract.COLUMN_POST_ID + " " + UNIQUE_TEXT_TYPE + " ," +
-            DataProviderContract.COLUMN_X + " " + INTEGER_TYPE + " ," +
-            DataProviderContract.COLUMN_Y + " " + INTEGER_TYPE  +
+            DataProviderContract.COLUMN_X + " " + DOUBLE_TYPE + " ," +
+            DataProviderContract.COLUMN_Y + " " + DOUBLE_TYPE  +
             ")";
     
     private static final String CREATE_SPACE_TABLE_SQL = "CREATE TABLE" + " " +
